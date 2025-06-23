@@ -1,0 +1,4 @@
+pub fn handle(file: &str) {
+    println!("Hashing object from file: {}", file);
+    // Your actual hash logic goes here
+}
