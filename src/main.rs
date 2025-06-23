@@ -1,26 +1,21 @@
-use crate::cmd::{hash_object, init};
-
-mod cmd;
 mod cli;
+mod cmd;
 
-fn main(){
+fn main() {
     let matches = cli::build_cli().get_matches();
 
     match matches.subcommand() {
-        Some(("init", sub_m)) => {
-            match sub_m.subcommand() {
-                Some(("hash-object", hash_m)) => {
-                    let file = hash_m.get_one::<String>("file").unwrap();
-                    hash_object::handle(file);
-                },
-                _ => {
-                    init::handle();  // init without any sub-subcommand
-                }
-            }
+        Some(("init", _)) => {
+            cmd::init::handle();
         },
-            
-        _ => {
-            eprintln!("Unknown command or subcommand");
-        }
-}
+        Some(("hash-object", sub_m)) => {
+            let file = sub_m.get_one::<String>("file").unwrap();
+            cmd::hash_object::handle(file);
+        },
+        Some(("cat-file", sub_m)) => {
+            let hash = sub_m.get_one::<String>("hash").unwrap();
+            cmd::cat_file::handle(hash);
+        },
+        _ => unreachable!(),
+    }
 }
